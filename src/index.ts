@@ -6,9 +6,11 @@ import { signUp } from "./resolvers/auth.resolver";
 import { doctorsResolver } from "./resolvers/doctors.resolver";
 import { doctorSchema } from "./schemas/doctors.schema";
 import { mergeTypeDefs, mergeResolvers } from "@graphql-tools/merge";
+import { timeResolver } from "./resolvers/timePick.resolver";
+import { timeSchema } from "./schemas/timePick.schema";
 
-const typeDefs = mergeTypeDefs([types,doctorSchema]);
-const resolvers = mergeResolvers([signUp,doctorsResolver]);
+const typeDefs = mergeTypeDefs([types,doctorSchema,timeSchema]);
+const resolvers = mergeResolvers([signUp,doctorsResolver,timeResolver]);
 
 const server = new ApolloServer({ typeDefs, resolvers});
 
