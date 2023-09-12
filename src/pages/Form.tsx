@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
+import Modal from "../components/Model";
 
 // Define interface for form input
 interface IFormInput {
@@ -16,6 +17,8 @@ interface IFormInput {
 function Form() {
 	const { register, handleSubmit, getValues } = useForm<IFormInput>();
 	const [currentStep, setCurrentStep] = useState(1);
+	const [readMore, setReadMore] = useState(false);
+	const [isModalOpen, setIsModalOpen] = useState(true);
 	const [formData, setFormData] = useState<IFormInput>({
 		doctor: "",
 		email: "",
@@ -50,6 +53,13 @@ function Form() {
 
 	const handlePrevious = () => {
 		setCurrentStep(currentStep - 1);
+	};
+	const handleReadMore = () => {
+		setIsModalOpen(true);
+	};
+
+	const closeModal = () => {
+		setIsModalOpen(false);
 	};
 
 	const renderStep = () => {
@@ -106,17 +116,41 @@ function Form() {
 						}>
 						<div className='flex flex-1 flex-col border rounded-xl p-5 bg-gray-300 font-poppins'>
 							<h3 className='uppercase text-center font-bold'>Dosiye Yawe</h3>
-							<div className="flex flex-row">
+							<div className='flex flex-row'>
 								<div>
 									<p>Email: {formData.email}</p>
 									<p>Doctor: {formData.doctor}</p>
 									<p>Id: {formData.patientId}</p>
 									<p>District: {formData.district}</p>
-									<p>Description: {formData.description}</p>
+									{/* <p>Description: {formData.description}</p> */}
+									<p>
+										Description:{" "}
+										{readMore
+											? formData.description
+											: formData.description.slice(0, 10) + " ..."}
+									</p>
+									{/* {formData.description.length > 10 && (
+                      <button
+                        onClick={() =>
+                          setReadMore(!readMore)
+                        }
+                        className="text-blue-600 border bg-green-600 p-10 text--whit"
+                      >
+                        {readMore ? "Read Less" : "Read More"}
+                      </button>
+                    )} */}
+									{formData.description.length > 10 && (
+										<p className='cursor-pointer' onClick={handleReadMore}>
+											Read More
+										</p>
+									)}
+									{isModalOpen && (
+										<Modal formData={formData} handleClose={closeModal} />
+									)}
 								</div>
 								<div>
 									<p>Avenue</p>
-                  <p>Time:10:00 AM</p>
+									<p>Time:10:00 AM</p>
 									<p>Date: 01/01/2023</p>
 									<p>Hospital: Remera Health Center</p>
 								</div>
@@ -163,14 +197,35 @@ function Form() {
 					</div>
 				);
 			// Add more cases for additional steps
-
+			case 3:
+				return (
+					<div className='flex flex-1 flex-col border rounded-xl p-5 bg-gray-300 font-poppins'>
+						<h3 className='uppercase text-center font-bold'>Dosiye Yawe</h3>
+						<div className='flex flex-row'>
+							<div>
+								<p>Email: {formData.email}</p>
+                <p>Code : GSB1201232323k90</p>
+								<p>Doctor: {formData.doctor}</p>
+								<p>Id: {formData.patientId}</p>
+								<p>District: {formData.district}</p>
+								<p>Description: {formData.description}</p>
+							</div>
+							<div>
+								<p>Avenue</p>
+								<p>Time:10:00 AM</p>
+								<p>Date: 01/01/2023</p>
+								<p>Hospital: Remera Health Center</p>
+							</div>
+						</div>
+					</div>
+				);
 			default:
 				return null;
 		}
 	};
 
 	return (
-		<div className='flex flex-col items-center justify-start space-y-10 border border-black h-96 bg-slate-400 rounded'>
+		<div className='flex flex-col items-center justify-start space-y-10 border border-black h-auto p-5 bg-slate-400 rounded'>
 			<div className='flex w-full justify-center items-center space-x-3 mt-5'>
 				<Link
 					to={"/form"}
